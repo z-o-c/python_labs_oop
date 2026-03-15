@@ -1,0 +1,9 @@
+.venv
+
+src/lab01/__pycache__
+
+images/cheremsha/cheremsha.jpg
+
+src/lab01/draft.py
+src/lab01/draft_readme.md
+src/lab02
