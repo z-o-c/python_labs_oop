@@ -1,9 +1,14 @@
-.venv
+# Окружение
+.venv/
 
-src/lab01/__pycache__
+# Python (игнор кэша во всех папках)
+**/__pycache__/
 
-images/cheremsha/cheremsha.jpg
-
+# Будущие лабы и draft
 src/lab01/draft.py
 src/lab01/draft_readme.md
-src/lab02
+src/lab03
+src/lab04
+src/lab05
+src/lab06
+src/lab07

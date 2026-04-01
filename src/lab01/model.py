@@ -1,4 +1,4 @@
-from validate import (
+from src.lab01.validate import (
     validate_name,
     validate_price,
     validate_discount,

@@ -7,7 +7,7 @@ def validate_name(value):
 def validate_price(value):
     if not isinstance(value, (int, float)):
         raise ValueError("Price должен быть int или float")
-    if not (0 < value <= 99999):
+    if not (0 < value <= 999999):
         raise ValueError("Price должен быть от 1 до 99999 (включительно)")
         
 def validate_discount(value):
