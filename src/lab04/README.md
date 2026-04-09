@@ -1,0 +1,1 @@
+![](../../images/cheremsha/cheremsha.jpg)
