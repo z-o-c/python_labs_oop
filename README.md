@@ -1,6 +1,6 @@
 # python_labs_oop
 
->  Ссылки на материалы каждой лабораторной работы: подробные описания (README), исходный код и каталоги данных.
+>  Ссылки на материалы каждой лабораторной работы: подробные описания (README) и исходный код
 
 >  Условия задач: [python_oop](https://github.com/outtathe/python_oop)
 
@@ -26,3 +26,16 @@
 
 - Демонстрация:
   - [demo](src/lab02/demo.py)
+
+## Лабораторная номер 3
+
+- [README](src/lab03/README.md) — подробное описание лабораторной
+
+- Base:
+  - [base](src/lab03/base.py)
+
+- Model:
+  - [model](src/lab03/model.py)
+
+- Демонстрация:
+  - [demo](src/lab03/demo.py)

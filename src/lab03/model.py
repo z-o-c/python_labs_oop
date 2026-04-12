@@ -11,12 +11,16 @@ class Product(ABC):
     currency = "₽"
 
     def __init__(self, name, price, discount, category, product_id):
-        self.name = name
-        self.price = price
-        self.discount = discount
-        self.category = category
-        
+        validate_name(name)
+        validate_price(price)
+        validate_discount(discount)
+        validate_category(category)
         validate_product_id(product_id)
+
+        self._name = name
+        self._price = price
+        self._discount = discount
+        self._category = category
         self._product_id = product_id
         
         self._active = True
@@ -70,6 +74,11 @@ class Product(ABC):
         validate_category(category)
         self._category = category
 
+    # ===== active =====
+    @property
+    def is_active(self):
+        return self._active
+
     @abstractmethod
     def process(self, quantity: int):
         """ Метод обработки (продажи/выдачи) товара """
@@ -103,7 +112,7 @@ class Product(ABC):
     def __repr__(self) -> str:
         """ техническое представление для отладки """
         return (
-            f"Product(name={self.name!r}, price={self.price}, "
+            f"{self.__class__.__name__}(name={self.name!r}, price={self.price}, "
             f"discount={self.discount}, category={self.category!r}, product_id={self.product_id!r})"
         )
     

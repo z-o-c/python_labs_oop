@@ -1,11 +1,12 @@
 from datetime import date, timedelta
-from src.lab03.base import FoodProduct, DigitalProduct, Service
+from src.lab03.base import FoodProduct, DigitalProduct
+from src.lab02.collection import ProductCatalog
 
 def main():
     print("=== [1] Создание товаров разных типов ===")
     
-    # 1. Еда. Сделаем так, чтобы ей оставалось жить всего 2 дня 
-    # (Произвели 3 дня назад, срок годности 5 дней). Должна сработать уценка 50%!
+    # 1. Еда
+    # (Произвели 3 дня назад, срок годности 5 дней). Должна сработать уценка 50%
     bread = FoodProduct(
         name="Хлеб Бородинский", 
         price=100, 
@@ -17,7 +18,7 @@ def main():
         shelf_life_days=5 
     )
 
-    # 2. Цифровой товар. Формат mp4 (наценка х1.2 по нашему словарю)
+    # 2. Цифровой товар. Формат mp4 (наценка 1.2)
     course = DigitalProduct(
         name="Курс Python ООП", 
         price=5000, 
@@ -27,29 +28,19 @@ def main():
         file_format="mp4"
     )
 
-    # 3. Услуга. Обычная цена, но есть базовая скидка 5%
-    haircut = Service(
-        name="Стрижка Fade", 
-        price=1500, 
-        discount=5, 
-        category="Услуги", 
-        product_id="S505", 
-        master_name="Барбер Олег"
-    )
-
     # ПОЛИМОРФИЗМ: Складываем абсолютно РАЗНЫЕ объекты в один общий список
-    cart =[bread, course, haircut]
+    cart = ProductCatalog()
+    cart.add(bread)
+    cart.add(course)
+    print(cart)
 
     print("\n=== [2] Демонстрация Полиморфизма (Расчет стоимости) ===")
     total_price = 0
     
-    # Один цикл обрабатывает все типы товаров!
     for item in cart:
         # Автоматически вызывается переопределенный __str__ для каждого класса
         print(item) 
         try:
-            # Магия здесь: вызывается абстрактный get_final_price(), 
-            # который внутри себя дергает уникальный calculate() каждого класса!
             final_price = item.get_final_price()
             print(f"Финальная цена: {final_price} руб.\n")
             total_price += final_price
@@ -61,8 +52,7 @@ def main():
     print("=== [3] Оформление заказа (Обработка товаров) ===")
     for item in cart:
         try:
-            # Снова полиморфизм: вызываем один метод process(), но результаты разные:
-            # Еда спишется со склада, Курс сгенерирует ссылку, Услуга забронируется.
+            # Еда спишется со склада, Курс сгенерирует ссылку
             item.process(quantity=2)
         except ValueError as e:
             print(f"Ошибка обработки: {e}")
@@ -70,6 +60,12 @@ def main():
     print("\n=== [4] Состояние товаров после покупки ===")
     for item in cart:
         print(item)
+
+    print("\n=== [5] Фильтрация по типу (isinstance) ===")
+    print("Выводим только цифровые товары из каталога:")
+    for item in cart:
+        if isinstance(item, DigitalProduct):
+            print(f"Найден цифровой товар: {item.name} (Формат: {item.file_format})")
 
 if __name__ == "__main__":
     main()

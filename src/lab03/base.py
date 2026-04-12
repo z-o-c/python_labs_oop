@@ -5,10 +5,11 @@ from src.lab01.validate import validate_stock
 class FoodProduct(Product):
     def __init__(self, name, price, stock, discount, category, product_id, production_date: date, shelf_life_days: int):
         super().__init__(name, price, discount, category, product_id)
+        validate_stock(stock)
 
-        self.stock = stock
-        self.production_date = production_date
-        self.shelf_life_days = shelf_life_days
+        self._stock = stock
+        self._production_date = production_date
+        self._shelf_life_days = shelf_life_days
 
     @property
     def stock(self):
@@ -19,9 +20,17 @@ class FoodProduct(Product):
         validate_stock(stock)
         self._stock = stock
 
+    @property
+    def production_date(self):
+        return self._production_date
+    
+    @property
+    def shelf_life_days(self):
+        return self._shelf_life_days
+
     def is_expired(self) -> bool:
         """Проверяет, истек ли срок годности"""
-        expiration_date = self.production_date + timedelta(days=self.shelf_life_days)
+        expiration_date = self._production_date + timedelta(days=self._shelf_life_days)
         return date.today() > expiration_date
 
     def process(self, quantity: int = 1):
@@ -40,7 +49,7 @@ class FoodProduct(Product):
             raise ValueError(f"Товар {self.name} просрочен. Он автоматически снят с продажи.")
 
         # Уценка 50%, если осталось 3 дня или меньше
-        expiration_date = self.production_date + timedelta(days=self.shelf_life_days)
+        expiration_date = self._production_date + timedelta(days=self._shelf_life_days)
         days_left = (expiration_date - date.today()).days
 
         if days_left <= 3:
@@ -49,20 +58,30 @@ class FoodProduct(Product):
         return round(self.price, 2)
     
     def __str__(self) -> str:
-        return f"{super().__str__()} (Дата изготовления: {self.production_date}. Срок годности: {self.shelf_life_days})"
+        return f"{super().__str__()} (Дата изготовления: {self._production_date}. Срок годности: {self._shelf_life_days})"
 
 
 class DigitalProduct(Product):
     def __init__(self, name, price, discount, category, product_id,  file_format: str):
         super().__init__(name, price, discount, category, product_id)
 
-        self.file_format = file_format
-        self.download_link = ""        
+        self._file_format = file_format
+        self._download_link = ""        
     
+    @property
+    def file_format(self):
+        return self._file_format
+    
+    @property
+    def download_link(self):
+        if not self._download_link:
+            return "Ожидает генерации после оплаты"
+        return self._download_link
+
     def process(self, quantity: int = 1):
-        if not self.download_link:
+        if not self._download_link:
             self.generate_download_link()
-        print(f"На email клиента отправлено {quantity} ключей для '{self.name}'. Ссылка: {self.download_link}")
+        print(f"На email клиента отправлено {quantity} ключей для '{self.name}'. Ссылка: {self._download_link}")
 
     def calculate(self) -> float:
         format_multipliers = {
@@ -71,28 +90,12 @@ class DigitalProduct(Product):
             'mkv': 1.3, 'psd': 1.8, 'ai': 2.0,
             'stl': 1.6, 'zip': 0.8
         }
-        multiplier = format_multipliers.get(self.file_format.lower(), 1.0)
+        multiplier = format_multipliers.get(self._file_format.lower(), 1.0)
         return round(self.price * multiplier, 2)
     
     def generate_download_link(self) -> str:
-        self.download_link = f"https://download.example.com/{self.product_id}.{self.file_format.lower()}"
-        return self.download_link
+        self._download_link = f"https://download.example.com/{self.product_id}.{self._file_format.lower()}"
+        return self._download_link
     
     def __str__(self) -> str:
-        link_status = self.download_link if self.download_link else "Ожидает генерации после оплаты"
-        return f"{super().__str__()}[Формат: {self.file_format}] (Ссылка: {link_status})"
-
-class Service(Product): 
-    def __init__(self, name, price, discount, category, product_id, master_name: str):
-        super().__init__(name, price, discount, category, product_id)
-        self.master_name = master_name 
-
-    def process(self, quantity: int = 1):
-        print(f"Забронировано {quantity} слотов на '{self.name}'. Мастер: {self.master_name}")
-
-    def calculate(self) -> float:
-        return float(self.price)
-
-    def __str__(self) -> str:
-        return f"{super().__str__()} (Исполнитель: {self.master_name})"
-    
+        return f"{super().__str__()}[Формат: {self._file_format}] (Ссылка: {self.download_link})"

@@ -1,4 +1,4 @@
-from src.lab01.model import Product
+from src.lab03.model import Product
 
 class ProductCatalog:
     def __init__(self):
@@ -51,7 +51,7 @@ class ProductCatalog:
         available_catalog = ProductCatalog()
 
         for item in self._items:
-            if getattr(item, '_active', False):
+            if item.is_active:
                 available_catalog.add(item)
                 
         return available_catalog
