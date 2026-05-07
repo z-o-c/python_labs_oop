@@ -140,4 +140,3 @@ class Product:
             return NotImplemented
         
         return self.price < other.price 
- 
